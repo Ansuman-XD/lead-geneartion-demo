@@ -4,6 +4,8 @@ import { Phone, MessageCircle, Flame, MapPin, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { telHref, waHref } from "@/lib/phone";
+import { toast } from "sonner";
 
 interface Props {
   lead: Lead;
@@ -12,15 +14,22 @@ interface Props {
 }
 
 export function LeadCard({ lead, draggable, onDragStart }: Props) {
-  const wa = `https://wa.me/${lead.phone.replace(/\D/g, "")}`;
-  const tel = `tel:${lead.phone}`;
+  const wa = waHref(lead.phone);
+  const tel = telHref(lead.phone);
+
+  const handleCall = (e: React.MouseEvent) => {
+    if (tel === "#") {
+      e.preventDefault();
+      toast.error("No phone number on file");
+    }
+  };
 
   return (
     <div
       draggable={draggable}
       onDragStart={onDragStart}
       className={cn(
-        "group surface-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-glow transition-all",
+        "group surface-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-glow hover:-translate-y-0.5 transition-all",
         draggable && "cursor-grab active:cursor-grabbing",
       )}
     >
@@ -55,7 +64,7 @@ export function LeadCard({ lead, draggable, onDragStart }: Props) {
 
       <div className="flex gap-1.5">
         <Button asChild size="sm" variant="outline" className="flex-1 h-8 text-xs">
-          <a href={tel}><Phone className="h-3 w-3" /> Call</a>
+          <a href={tel} onClick={handleCall}><Phone className="h-3 w-3" /> Call</a>
         </Button>
         <Button asChild size="sm" className="flex-1 h-8 text-xs bg-[hsl(142_70%_45%)] hover:bg-[hsl(142_70%_38%)] text-white">
           <a href={wa} target="_blank" rel="noreferrer"><MessageCircle className="h-3 w-3" /> WhatsApp</a>
