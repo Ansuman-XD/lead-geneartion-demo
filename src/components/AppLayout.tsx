@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { AddLeadDialog } from "@/components/AddLeadDialog";
 import { ImportCsvDialog } from "@/components/ImportCsvDialog";
+import { NotificationsBell } from "@/components/NotificationsBell";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -82,9 +83,12 @@ export function AppLayout({ children }: { children?: ReactNode }) {
             </div>
             <span className="font-display font-bold">TransitCRM</span>
           </div>
-          <Button size="sm" onClick={() => setAddOpen(true)}>
-            <Plus className="h-4 w-4" /> New
-          </Button>
+          <div className="flex items-center gap-1">
+            <NotificationsBell />
+            <Button size="sm" onClick={() => setAddOpen(true)}>
+              <Plus className="h-4 w-4" /> New
+            </Button>
+          </div>
         </header>
         <main className="flex-1 p-4 md:p-8 animate-fade-in">{children ?? <Outlet />}</main>
       </div>

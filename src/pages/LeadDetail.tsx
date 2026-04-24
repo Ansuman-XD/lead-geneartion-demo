@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Phone, MessageCircle, Flame, Trash2, Calendar, MessageSquare, ArrowRightLeft, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import { telHref, waHref } from "@/lib/phone";
 
 const iconForType = (t: string) => {
   if (t === "stage_change") return ArrowRightLeft;
@@ -65,10 +66,10 @@ export default function LeadDetail() {
             {lead.hot ? "Hot" : "Mark hot"}
           </Button>
           <Button asChild variant="outline">
-            <a href={`tel:${lead.phone}`}><Phone className="h-4 w-4" /> Call</a>
+            <a href={telHref(lead.phone)}><Phone className="h-4 w-4" /> Call</a>
           </Button>
           <Button asChild className="bg-[hsl(142_70%_45%)] hover:bg-[hsl(142_70%_38%)] text-white">
-            <a href={`https://wa.me/${lead.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer">
+            <a href={waHref(lead.phone)} target="_blank" rel="noreferrer">
               <MessageCircle className="h-4 w-4" /> WhatsApp
             </a>
           </Button>

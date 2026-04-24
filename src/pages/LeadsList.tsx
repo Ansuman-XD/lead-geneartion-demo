@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { REQUIREMENTS, STAGES, stageColor } from "@/types/lead";
-import { Phone, MessageCircle, Flame, Search, Filter, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Phone, MessageCircle, Flame, Search, Filter, X, FileSpreadsheet } from "lucide-react";
+import { TopBar } from "@/components/TopBar";
+import { exportLeadsToExcel } from "@/lib/excel";
+import { telHref, waHref } from "@/lib/phone";
+import { toast } from "sonner";
 
 export default function LeadsList() {
   const { leads } = useLeads();
@@ -39,14 +42,24 @@ export default function LeadsList() {
   const clear = () => { setQ(""); setStage("all"); setCity("all"); setReq("all"); setFrom(""); setTo(""); };
   const hasFilter = q || stage !== "all" || city !== "all" || req !== "all" || from || to;
 
+  const handleExport = () => {
+    if (filtered.length === 0) { toast.error("No leads to export"); return; }
+    const stamp = new Date().toISOString().slice(0, 10);
+    exportLeadsToExcel(filtered, `leads-${stamp}.xlsx`);
+    toast.success(`Exported ${filtered.length} leads to Excel`);
+  };
+
   return (
     <div className="space-y-6 max-w-7xl">
-      <div className="flex items-end justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="font-display text-3xl font-bold tracking-tight">Leads</h1>
-          <p className="text-muted-foreground mt-1">{filtered.length} of {leads.length} leads</p>
-        </div>
-      </div>
+      <TopBar
+        title="Leads"
+        subtitle={`${filtered.length} of ${leads.length} leads`}
+        actions={
+          <Button onClick={handleExport} variant="outline" size="sm" className="gap-2">
+            <FileSpreadsheet className="h-4 w-4" /> Export Excel
+          </Button>
+        }
+      />
 
       <Card className="surface-card border-border p-4">
         <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
@@ -128,11 +141,11 @@ export default function LeadsList() {
                   <td className="px-4 py-3 text-muted-foreground text-xs">{l.nextFollowUp || "—"}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
-                      <Button asChild size="icon" variant="ghost" className="h-8 w-8">
-                        <a href={`tel:${l.phone}`}><Phone className="h-4 w-4" /></a>
+                      <Button asChild size="icon" variant="ghost" className="h-8 w-8" title="Call">
+                        <a href={telHref(l.phone)}><Phone className="h-4 w-4" /></a>
                       </Button>
-                      <Button asChild size="icon" variant="ghost" className="h-8 w-8 text-[hsl(142_70%_50%)]">
-                        <a href={`https://wa.me/${l.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" /></a>
+                      <Button asChild size="icon" variant="ghost" className="h-8 w-8 text-[hsl(142_70%_50%)]" title="WhatsApp">
+                        <a href={waHref(l.phone)} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" /></a>
                       </Button>
                     </div>
                   </td>
