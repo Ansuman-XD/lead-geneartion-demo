@@ -3,6 +3,11 @@ import type { Config } from "tailwindcss";
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  safelist: [
+    "bg-stage-new", "bg-stage-contacted", "bg-stage-followup", "bg-stage-negotiation", "bg-stage-converted", "bg-stage-lost",
+    "text-stage-new", "text-stage-contacted", "text-stage-followup", "text-stage-negotiation", "text-stage-converted", "text-stage-lost",
+    "border-stage-new/40", "border-stage-contacted/40", "border-stage-followup/40", "border-stage-negotiation/40", "border-stage-converted/40", "border-stage-lost/40",
+  ],
   prefix: "",
   theme: {
     container: {
